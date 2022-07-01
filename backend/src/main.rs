@@ -1,4 +1,8 @@
-use actix_web::{get, http::header::ContentType, App, HttpResponse, HttpServer, Responder};
+use actix_web::{
+    get, http::header::ContentType, post, web, App, HttpResponse, HttpServer, Responder,
+};
+use serde::{Deserialize, Serialize};
+use utoipa::Component;
 
 mod api_doc;
 
@@ -11,6 +15,36 @@ mod api_doc;
 #[get("/api/hello")]
 async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
+}
+
+#[derive(Deserialize, Serialize, Component, Clone, Debug)]
+pub struct AdditionalNames {
+    others: Vec<String>,
+}
+
+/// Get a customized hello
+#[utoipa::path(
+    request_body = Option<AdditionalNames>,
+    responses(
+        (status = 200, description = "Textual hello", body = String),
+    )
+)]
+#[post("/api/hello/{name}")]
+async fn hello_name(
+    name: web::Path<String>,
+    additional: Option<web::Json<AdditionalNames>>,
+) -> impl Responder {
+    let other_names = if let Some(additional) = additional {
+        additional.others.join(", ")
+    } else {
+        String::new()
+    };
+
+    if other_names.is_empty() {
+        format!("Hello {name}!")
+    } else {
+        format!("Hello {name} and welcome to {other_names}!")
+    }
 }
 
 #[get("/")]
@@ -35,6 +69,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .service(hello)
+            .service(hello_name)
             .service(index)
             .configure(api_doc::config)
     })
