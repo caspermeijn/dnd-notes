@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use crate::logs;
+use crate::logs::LogEntry;
 use crate::AdditionalNames;
 use actix_web::web;
 use utoipa::OpenApi;
@@ -22,8 +24,18 @@ use utoipa_swagger_ui::SwaggerUi;
 
 #[derive(utoipa::OpenApi)]
 #[openapi(
-    handlers(crate::hello, crate::hello_name,),
-    components(AdditionalNames,)
+    handlers(
+        crate::hello,
+        crate::hello_name,
+        logs::get_logs,
+    ),
+    components(
+        AdditionalNames,
+        LogEntry,
+    ),
+    tags(
+        (name = "logs", description = "Log management endpoints.")
+    ),
 )]
 struct ApiDoc;
 
