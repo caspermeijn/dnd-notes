@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use crate::logs::LogsState;
 use actix_web::{
     get, http::header::ContentType, post, web, App, HttpResponse, HttpServer, Responder,
 };
@@ -22,6 +23,7 @@ use serde::{Deserialize, Serialize};
 use utoipa::Component;
 
 mod api_doc;
+mod logs;
 
 /// Get a hello message
 #[utoipa::path(
@@ -83,12 +85,15 @@ async fn main() -> std::io::Result<()> {
         port
     );
 
-    HttpServer::new(|| {
+    let log_state = web::Data::new(LogsState::default());
+
+    HttpServer::new(move || {
         App::new()
             .service(hello)
             .service(hello_name)
             .service(index)
             .configure(api_doc::config)
+            .configure(logs::configure(log_state.clone()))
     })
     .bind(("0.0.0.0", port))?
     .run()
