@@ -44,8 +44,27 @@ async fn add_log(new_log: web::Json<LogEntry>, data: web::Data<LogsState>) -> im
     HttpResponse::Ok().json(response)
 }
 
+/// Get all log tags
+///
+/// Returns a list of all tags in storage.
+#[utoipa::path(
+responses(
+(status = 200, description = "Successful retrieval", body = [String], example = json!(["Strahd", "Barovia"])),
+)
+)]
+#[get("/api/logs/tags")]
+async fn get_tags(data: web::Data<LogsState>) -> impl Responder {
+    let storage = data.storage.lock().unwrap();
+    let logs = storage.get_all_tags();
+    HttpResponse::Ok().json(logs)
+}
+
 pub(super) fn configure(state: web::Data<LogsState>) -> impl FnOnce(&mut web::ServiceConfig) {
     |config: &mut web::ServiceConfig| {
-        config.app_data(state).service(get_logs).service(add_log);
+        config
+            .app_data(state)
+            .service(get_logs)
+            .service(add_log)
+            .service(get_tags);
     }
 }
