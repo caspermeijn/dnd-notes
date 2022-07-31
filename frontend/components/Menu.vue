@@ -1,6 +1,6 @@
 <template>
   <div class="menu bg-slate-700">
-    <img src="logo.png" alt="logo"/>
+    <img src="/logo.png" alt="logo"/>
   </div>
 </template>
 

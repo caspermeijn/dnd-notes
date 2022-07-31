@@ -4,7 +4,8 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "start": "nuxt build && nuxt preview"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.3.1",
