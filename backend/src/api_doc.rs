@@ -28,6 +28,7 @@ use utoipa_swagger_ui::SwaggerUi;
         crate::hello,
         crate::hello_name,
         logs::get_logs,
+        logs::add_log,
     ),
     components(
         AdditionalNames,

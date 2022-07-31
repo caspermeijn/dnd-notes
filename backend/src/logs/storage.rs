@@ -3,11 +3,22 @@ use crate::logs::types::LogEntry;
 #[derive(Clone, Debug)]
 pub struct LogStorage {
     logs: Vec<LogEntry>,
+    next_id: u32,
 }
 
 impl LogStorage {
     pub fn get_all_logs(&self) -> Vec<LogEntry> {
         self.logs.clone()
+    }
+
+    pub fn add_log(&mut self, partial_log: LogEntry) -> LogEntry {
+        let mut complete_log = partial_log;
+        complete_log.id = self.next_id;
+        self.next_id += 1;
+
+        self.logs.push(complete_log.clone());
+
+        complete_log
     }
 }
 
@@ -36,6 +47,7 @@ impl Default for LogStorage {
                     tags: vec!["Strahd".to_string()],
                 },
             ],
+            next_id: 5,
         }
     }
 }
