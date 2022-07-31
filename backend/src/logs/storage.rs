@@ -1,4 +1,5 @@
 use crate::logs::types::LogEntry;
+use itertools::Itertools;
 
 #[derive(Clone, Debug)]
 pub struct LogStorage {
@@ -19,6 +20,14 @@ impl LogStorage {
         self.logs.push(complete_log.clone());
 
         complete_log
+    }
+
+    pub fn get_all_tags(&self) -> Vec<String> {
+        self.logs
+            .iter()
+            .flat_map(|log| log.tags.clone())
+            .unique()
+            .collect()
     }
 }
 
