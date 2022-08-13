@@ -2,9 +2,7 @@
   <div class="log">
     {{log.text}}
 
-    <div class="tags">
-      <div class="tag shadow rounded bg-slate-600 text-slate-50" v-for="tag in log.tags">{{tag}}</div>
-    </div>
+    <Tags :tags="log.tags"/>
   </div>
 </template>
 
@@ -13,19 +11,20 @@ const props = defineProps({
   log: {
     type: [Object]
   }
-})
+});
 </script>
 
 <style scoped lang="scss">
 .log {
-  .tags {
-    display: inline-block;
-    .tag {
-      display: inline-block;
-      margin-left: 0.5em;
+  overflow: scroll;
+  white-space: nowrap;
 
-      padding: 0.25em 0.5em;
-    }
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 </style>
+

@@ -1,21 +1,30 @@
 <template>
   <div class="logs">
-    <h1 class="text-4xl roboto font-extrabold">Logs</h1>
-    <Log v-for="log in logs" :log="log"/>
+    <Log v-for="(log, key) in logs" :log="log" :key="`log-${key}`"/>
   </div>
 </template>
 
 <script setup>
 
-const {data: logs} = await useApi('logs');
+const props = defineProps({
+  filter: {
+    type: Array
+  },
+  data: {
+    type: Array
+  }
+});
+
+let logs = ref(props.data);
+
+watch(props.filter, (newFilter) => {
+
+  logs.value = props.data.filter(p => newFilter.every((f) => p.tags.includes(f)));
+})
 
 </script>
 
 <style scoped lang="scss">
-
-.logs {
-  margin: 1em 0 0 1em;
-}
 
 :deep(.log) {
   +.log {
