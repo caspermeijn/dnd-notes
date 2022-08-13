@@ -1,5 +1,9 @@
 <template>
   <div class="index">
+
+    <h1 class="text-4xl roboto font-extrabold">Add Log</h1>
+    <Input class="input"/>
+
     <h1 class="text-4xl roboto font-extrabold">Tags</h1>
     <Tags class="tags" :selectable="true"/>
 
@@ -8,6 +12,8 @@
   </div>
 </template>
 <script setup>
+
+import Input from "../components/Input";
 
 const state = reactive({
   tags: []
@@ -28,11 +34,15 @@ useMitt().on('tag', (e) => {
 
 <style scoped lang="scss">
 .index {
-
-  margin: 1em 0 0 1em;
+  margin: 1em;
 
   h1 {
     margin-bottom: 0.3em;
+  }
+
+  .input {
+
+    margin-bottom: 2em;
   }
 
   .tags {
