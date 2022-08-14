@@ -16,6 +16,7 @@
  */
 
 use crate::logs::LogsState;
+use actix_cors::Cors;
 use actix_web::{
     get, http::header::ContentType, post, web, App, HttpResponse, HttpServer, Responder,
 };
@@ -88,7 +89,10 @@ async fn main() -> std::io::Result<()> {
     let log_state = web::Data::new(LogsState::default());
 
     HttpServer::new(move || {
+        let cors = Cors::default().allow_any_origin();
+
         App::new()
+            .wrap(cors)
             .service(hello)
             .service(hello_name)
             .service(index)
